@@ -1,0 +1,86 @@
+// -------- Protons at top energy
+ beam, mass = 0.93827, charge = 1, gamma = 268.2, exn = 20.0e-06, 
+       eyn = 20.0e-06, sige = 0.001;
+
+// -------- The lattice file from the data base.
+option, -echo;
+
+//CALL, FILE = "/rap/Holy_Lattice/Blue/MADX_lat.asc";
+CALL, FILE = "./MADX_lat_Blue.asc";
+rhic :line=(blue);
+title, "Relativistic Heavy Ion Collider";
+
+// -------- Gradients are set with:
+//CALL, FILE = "/rap/Holy_Lattice/set/rhic-2011pp250GeV-blue.setx"; 
+CALL, FILE = "./rhic-2011pp250GeV-blue.setx";
+
+// -------- Utility subroutines, setting tunes, chromaticities, etc
+//CALL, FILE = "/rap/Holy_Lattice/madfiles/rhic_utilities.madx";
+CALL, FILE = "./rhic_utilities.madx";
+
+//   Setting up the quadrupole strengths (must be done in this order)
+//
+// -------- 6 O'clock
+exec, strength0d7;
+exec, set6oc;
+//
+// -------- 8 O'clock
+exec, strength0d7;
+exec, set8oc;
+//
+// -------- 10 O'clock
+exec, strength5;
+exec, set10oc;
+//
+// -------- 12 O'clock
+exec, strength5;
+exec, set12oc;
+//
+// -------- 2 O'clock
+exec, strength5;
+exec, set2oc;
+//
+// -------- 4 O'clock
+exec, strength5;
+exec, set4oc;
+option, echo;
+
+//-----include the IR nonlinear
+//call, file="/home/yunluo/rhic/IR_errors_patch2013/Blue_ir_errors_cw_xoyu_5K";
+//B2M05C3B : multipole, knl={0,0,0.00490292111719};
+//B2M06C3B : multipole, knl={0,0,-0.00856264647254};
+//B3M05C3B  :multipole, knl={0,0,0,0.0391315888847};
+//B3M06C3B  :multipole, knl={0,0,0,-0.036771556189};
+//A2M05C2B  :multipole, ksl={0,0,-0.00141366119784};
+//A2M06C2B  :multipole, ksl={0,0,-0.00198949936184};
+//B2M07C3B : multipole, knl={0,0,-0.00408174709069};
+//B2M08C3B : multipole, knl={0,0,0.00257678005972};
+//B3M07C3B  :multipole, knl={0,0,0,-0.0201055997715};
+//B3M08C3B  :multipole, knl={0,0,0,0.0426765433289};
+//A2M07C2B  :multipole, ksl={0,0,0.00186882567141};
+//A2M08C2B  :multipole, ksl={0,0,0.00193096736509};
+
+
+// -------- Setting up the arc quadrupole strengths
+Qx = 28.23;
+Qy = 29.22;
+value, kd, kf;
+exec, setarcquads;
+
+// -------- Set the chromaticity.
+match, sequence=rhic;
+    vary, name=SF0, step = 0.00001;
+    vary, name=SD0, step = 0.00001;
+    global, sequence=rhic, dq1=1, dq2=1;
+    lmdif, calls=5000, tolerance=1.0e-12;
+endmatch;
+
+
+//----generate parameters_input
+
+use, period=lat;
+select,flag=twiss, clear;
+select, flag=twiss,  column=NAME, KEYWORD,S,L,ANGLE,E1,E2,tilt, K0L,K0SL,K1L,K1SL,K2L,K2SL,K3L,K3SL,K4L,K4SL,K5L,K5SL,K6L,K6SL,K7L,K7SL, K8L,K8SL,K9L,K9SL,K10L,K10SL, KS,HKICK, VKICK;
+twiss,table=twiss,file=parameters_input;
+stop;
+
