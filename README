@@ -1,0 +1,70 @@
+
+August 19, 2026
+
+1) PURPOSE OF THIS CODE:
+
+SimTrack is a compact c++ library of 6-d symplectic element-by-element particle tracking in accelerators originally designed for head-on beam–beam compensation simulation studies in the Relativistic Heavy Ion Collider (RHIC) at Brookhaven National Laboratory. It provides a 6-d symplectic orbit tracking with the 4th order symplectic integration for magnet elements and the 6-d symplectic synchro-beam map for beam–beam interaction. Since its inception in 2009, SimTrack has been intensively used for dynamic aperture calculations with beam–beam interaction for RHIC. Proton spin tracking and electron energy loss due to synchrotron radiation were added in 2015.
+
+2) Main Features:
+
+- easy to define, manage, edit beam line and its elements: like vectors
+- linear optics calculation
+- tune, chromaticity matching, and orbit correction
+- limited analytical nonlinear optics calculation: off-momentu functions,lower order RDT, detunings
+- providing commonly used optimizers
+- orbit and spin tracking
+- tune footprint, action diffusion, Lyapunov exponent, FMA 
+- functions for weak-strong and strong-strong beam-beam simulation 
+
+
+3) INSTALLATION:
+
+GSL is needed for SimTrack compile. GSL is used for eigenvectors and eigenvalues of one-turn matrix.
+
+The SimTrack package incldues two files: simtrack.h and simtrack.cpp
+
+First make a directory:  /bin/simtrack
+Copy simtrack.h into ./include, copy simtrack.cpp into ./src
+
+>cp simtrack.h  ./include
+>cp simtrack.cpp ./src
+
+Then compile and make library:
+
+>g++ -I ./include -c ./src/simtrack.cpp -o ./obj/simtrack.o
+>ar rcs ./lib/libsimtrack.a ./obj/simtrack.o
+
+I use cmake to make this library.
+
+4) SimTrack Manual
+
+>Obsolete Manual:
+
+SimTrack_Manual_2010.pdf
+
+This is an old  2010 version. Many functions and features had been added since then.
+
+> publication:
+
+"Y. Luo, SimTrack: A compact c++ code for particle orbit and spin tracking in accelerators, Nuclear Instruments and Methods in Physics Research A 801 (2015) 95–103."
+
+5) EXAMPLES
+
+Example 1: RHIC DA tracking
+Example 2: EIC/HSR DA tracking with crab cavities and field errors
+
+
+6) Citation:
+
+It will be appreciated if you cite it as:
+
+"Y. Luo, SimTrack: A compact c++ code for particle orbit and spin tracking in accelerators, Nuclear Instruments and Methods in Physics Research A 801 (2015) 95–103."
+
+
+
+
+
+
+
+
+
